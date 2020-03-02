@@ -1,0 +1,25 @@
+version: '3'
+services:
+    bit-hedge:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "8401:8401"
+    prometheus:
+        image: prom/prometheus
+        volumes:
+            - ./prometheus/config.yml:/etc/prometheus/prometheus.yml
+            - ./data/prometheus:/prometheus
+        command:
+            - '--config.file=/etc/prometheus/prometheus.yml'
+        ports:
+            - '9090:9090'
+        user: "104"
+    grafana:
+        image: grafana/grafana
+        ports:
+          - "3000:3000"
+        volumes:
+          - ./data/grafana:/var/lib/grafana
+        user: "104"
