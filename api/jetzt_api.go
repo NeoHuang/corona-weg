@@ -1,7 +1,7 @@
 package api
 
 import (
-	"log"
+	"fmt"
 	"net/http"
 	"strconv"
 	"sync"
@@ -25,29 +25,29 @@ func NewJetztApi(cachePeriod time.Duration) *JetztApi {
 	}
 }
 
-func (api *JetztApi) GetCurrent() core.EpidemicMap {
+func (api *JetztApi) GetCurrent() (core.EpidemicMap, error) {
 	api.mutex.Lock()
 	defer api.mutex.Unlock()
 
 	now := time.Now()
 	if api.lastEpidemicMap != nil &&
 		api.lastDetectedTime.Add(api.cachePeriod).After(now) {
-		return api.lastEpidemicMap
+		return api.lastEpidemicMap, nil
 	}
 
 	res, err := http.Get("https://www.coronavirus.jetzt/karten/deutschland/")
 	if err != nil {
-		log.Printf("failed to get http request:%s", err)
+		return nil, fmt.Errorf("failed to get http request:%s", err)
 	}
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
-		log.Printf("status code error: %d %s", res.StatusCode, res.Status)
+		return nil, fmt.Errorf("status code error: %d %s", res.StatusCode, res.Status)
 	}
 
 	// Load the HTML document
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
-		log.Printf("failed to parse body:%s", err)
+		return nil, fmt.Errorf("failed to parse body:%s", err)
 	}
 
 	epidemicMap := core.EpidemicMap{}
@@ -68,5 +68,5 @@ func (api *JetztApi) GetCurrent() core.EpidemicMap {
 	api.lastEpidemicMap = epidemicMap
 	api.lastDetectedTime = now
 
-	return epidemicMap
+	return epidemicMap, nil
 }
