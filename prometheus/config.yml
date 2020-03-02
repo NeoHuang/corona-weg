@@ -6,7 +6,7 @@ scrape_configs:
     static_configs:
     - targets: ['localhost:9090']
 
-  - job_name: 'bit-hedge-promethues'
+  - job_name: 'corona-weg-promethues'
     scrape_interval: 5s # for demo purpose
     static_configs:
-      - targets: ['bit-hedge:8401']
+      - targets: ['corona-weg:8404']

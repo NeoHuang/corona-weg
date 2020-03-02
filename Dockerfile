@@ -8,8 +8,8 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o bit-hedge .
+RUN go build -o corona-weg .
 
-EXPOSE 8401
+EXPOSE 8404
 
-CMD ["./bit-hedge"]
+CMD ["./corona-weg"]
