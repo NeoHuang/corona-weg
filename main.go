@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/NeoHuang/bit-hedge/api"
+	"github.com/NeoHuang/bit-hedge/server"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -42,6 +43,8 @@ func main() {
 
 	// Handle Metrics endpoint
 	http.Handle(metricsSuffix, promhttp.Handler())
+
+	http.Handle("/api/epidemic", server.NewEpidemicHandler(api))
 
 	log.Printf("Metrics exported at http://%s%s", listenAddress, metricsSuffix)
 	log.Fatal(http.ListenAndServe(listenAddress, nil))
