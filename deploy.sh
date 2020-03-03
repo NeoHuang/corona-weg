@@ -1,7 +1,4 @@
+
 #!/bin/bash
 
-git checkout master
-git pull
-sudo docker-compose build
-sudo docker-compose down
-sudo docker-compose up -d
+ssh $AWS_SERVER "cd /home/ubuntu/workspace/corona-weg/ && ./server_deploy.sh"
