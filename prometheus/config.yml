@@ -7,6 +7,6 @@ scrape_configs:
     - targets: ['localhost:9090']
 
   - job_name: 'corona-weg-promethues'
-    scrape_interval: 5s # for demo purpose
+    scrape_interval: 10m
     static_configs:
       - targets: ['corona-weg:8404']
