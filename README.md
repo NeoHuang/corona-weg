@@ -1,6 +1,6 @@
 # What is this
 
-this project is to visualize current number of confirmed infections and deaths
+this project is to visualize current number of confirmed [SARS-CoV-2](https://en.wikipedia.org/wiki/Severe_acute_respiratory_syndrome_coronavirus_2) infections and deaths
 in Germany as well as providing a raw data API
 
 # How does it work
