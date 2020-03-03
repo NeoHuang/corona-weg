@@ -22,4 +22,5 @@ services:
           - "3000:3000"
         volumes:
           - ./data/grafana:/var/lib/grafana
+          - ./grafana/config.ini:/etc/grafana/grafana.ini
         user: "104"
