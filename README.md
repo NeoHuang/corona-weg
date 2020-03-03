@@ -26,4 +26,5 @@ if you see some permission error from prometheus or grafana service, make sure `
 
 a hosted dashboard can be found [Here](http://bit.ly/corona-weg) and the data API can be found [Here](http://bit.ly/corona-weg-api). It's a AWS EC2 micro VM. please be gentle with it.
 
+![image](https://user-images.githubusercontent.com/3006506/75823439-11075600-5da2-11ea-8d81-c4e8d13ebed0.png)
 
