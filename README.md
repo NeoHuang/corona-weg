@@ -20,7 +20,7 @@ docker-compose up
 the docker-compose will run the server as container and expose port `8404`. Also it will spin up
 Prometheus(port 9090) and Grafana(port 3000). 
 
-if you see some permission error from prometheus or grafana service, make sure `/data` folder is writable by the user.
+>if you see any permission error from prometheus or grafana service, make sure `data` folder is writable by the user.
 
 # Hosted service
 
