@@ -23,7 +23,7 @@ func main() {
 		Help:      "total number of infections/death",
 	}, []string{"bundesland", "type"})
 	prometheus.MustRegister(infectionsGauge)
-	api := api.NewJetztApi(5 * time.Minute)
+	api := api.NewRkiApi(5 * time.Minute)
 	go func() {
 		for {
 			epidemicMap, err := api.GetCurrent()
