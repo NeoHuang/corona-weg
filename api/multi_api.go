@@ -33,7 +33,7 @@ var Bundeslaender = map[string]struct{}{
 }
 
 func NewMultiApi(cachePeriod time.Duration) *MultiApi {
-	apis := []Api{NewJetztApi(cachePeriod), NewRkiApi(cachePeriod)}
+	apis := []Api{NewRkiApi(cachePeriod), NewJetztApi(cachePeriod)}
 	return &MultiApi{
 		apis: apis,
 	}
@@ -73,6 +73,8 @@ func (multiApi *MultiApi) GetCurrent() (core.EpidemicMap, error) {
 	mergedEpidemicMap["Gesamt"] = core.Epidemic{
 		Infections: totalInfections,
 		Deaths:     totalDeaths,
+		Timestamp:  time.Now(),
+		SourceApi:  "Merged",
 	}
 
 	return mergedEpidemicMap, nil

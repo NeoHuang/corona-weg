@@ -15,7 +15,7 @@ type Api interface {
 	GetCurrent() (core.EpidemicMap, error)
 }
 
-type ExtractFunc func(*goquery.Document) core.EpidemicMap
+type ExtractFunc func(*goquery.Document, string) core.EpidemicMap
 
 type GeneralApi struct {
 	url       string
@@ -66,7 +66,7 @@ func (api *GeneralApi) GetCurrent() (core.EpidemicMap, error) {
 		return nil, fmt.Errorf("Api %q failed to parse body:%s", api.name, err)
 	}
 
-	epidemicMap := api.extractFn(doc)
+	epidemicMap := api.extractFn(doc, api.name)
 	api.lastEpidemicMap = epidemicMap
 	api.lastDetectedTime = now
 

@@ -9,7 +9,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func JetztExtractFunc(doc *goquery.Document) core.EpidemicMap {
+func JetztExtractFunc(doc *goquery.Document, apiName string) core.EpidemicMap {
 	now := time.Now()
 	epidemicMap := core.EpidemicMap{}
 	doc.Find("tr[class^='row']").Each(func(i int, s *goquery.Selection) {
@@ -22,6 +22,7 @@ func JetztExtractFunc(doc *goquery.Document) core.EpidemicMap {
 				Infections: infections,
 				Deaths:     deaths,
 				Timestamp:  now,
+				SourceApi:  apiName,
 			}
 		}
 	})
@@ -29,7 +30,7 @@ func JetztExtractFunc(doc *goquery.Document) core.EpidemicMap {
 	return epidemicMap
 }
 
-func RkiExtractFunc(doc *goquery.Document) core.EpidemicMap {
+func RkiExtractFunc(doc *goquery.Document, apiName string) core.EpidemicMap {
 	now := time.Now()
 	epidemicMap := core.EpidemicMap{}
 	doc.Find("tbody").EachWithBreak(func(_ int, s *goquery.Selection) bool {
@@ -45,6 +46,7 @@ func RkiExtractFunc(doc *goquery.Document) core.EpidemicMap {
 						Infections: infections,
 						Deaths:     0,
 						Timestamp:  now,
+						SourceApi:  apiName,
 					}
 				}
 
