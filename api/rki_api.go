@@ -54,7 +54,7 @@ func (api *RkiApi) GetCurrent() (core.EpidemicMap, error) {
 	doc.Find("tbody").EachWithBreak(func(i int, s *goquery.Selection) bool {
 		// For each item found, get the band and title
 		var bundesland string
-		s.Find("td").Each(func(i int, s *goquery.Selection) {
+		s.Find("td").EachWithBreak(func(i int, s *goquery.Selection) bool {
 			if i%2 == 0 {
 				bundesland = s.Text()
 			} else {
@@ -65,6 +65,11 @@ func (api *RkiApi) GetCurrent() (core.EpidemicMap, error) {
 					Timestamp:  now,
 				}
 			}
+
+			if i == 1 {
+				return false
+			}
+			return true
 
 		})
 		return false
