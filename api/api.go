@@ -3,7 +3,6 @@ package api
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 	"sync"
 	"time"
 
@@ -11,21 +10,27 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-// crawl https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Fallzahlen.html
-type RkiApi struct {
+type ExtractFunc func(*goquery.Document) core.EpidemicMap
+
+type Api struct {
+	url       string
+	extractFn ExtractFunc
+
 	cachePeriod      time.Duration
 	lastEpidemicMap  core.EpidemicMap
 	lastDetectedTime time.Time
 	mutex            sync.Mutex
 }
 
-func NewRkiApi(cachePeriod time.Duration) *RkiApi {
-	return &RkiApi{
+func NewApi(endpointUrl string, extractFn ExtractFunc, cachePeriod time.Duration) *Api {
+	return &Api{
+		url:         endpointUrl,
+		extractFn:   extractFn,
 		cachePeriod: cachePeriod,
 	}
 }
 
-func (api *RkiApi) GetCurrent() (core.EpidemicMap, error) {
+func (api *Api) GetCurrent() (core.EpidemicMap, error) {
 	api.mutex.Lock()
 	defer api.mutex.Unlock()
 
@@ -35,7 +40,7 @@ func (api *RkiApi) GetCurrent() (core.EpidemicMap, error) {
 		return api.lastEpidemicMap, nil
 	}
 
-	res, err := http.Get("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Fallzahlen.html")
+	res, err := http.Get(api.url)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get http request:%s", err)
 	}
@@ -50,33 +55,17 @@ func (api *RkiApi) GetCurrent() (core.EpidemicMap, error) {
 		return nil, fmt.Errorf("failed to parse body:%s", err)
 	}
 
-	epidemicMap := core.EpidemicMap{}
-	doc.Find("tbody").EachWithBreak(func(i int, s *goquery.Selection) bool {
-		// For each item found, get the band and title
-		var bundesland string
-		s.Find("td").EachWithBreak(func(i int, s *goquery.Selection) bool {
-			if i%2 == 0 {
-				bundesland = s.Text()
-			} else {
-				infections, _ := strconv.Atoi(s.Text())
-				epidemicMap[bundesland] = core.Epidemic{
-					Infections: infections,
-					Deaths:     0,
-					Timestamp:  now,
-				}
-			}
-
-			if i == 1 {
-				return false
-			}
-			return true
-
-		})
-		return false
-	})
-
+	epidemicMap := api.extractFn(doc)
 	api.lastEpidemicMap = epidemicMap
 	api.lastDetectedTime = now
 
 	return epidemicMap, nil
+}
+
+func NewRkiApi(cachePeriod time.Duration) *Api {
+	return NewApi("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Fallzahlen.html", RkiExtractFunc, cachePeriod)
+}
+
+func NewJetztApi(cachePeriod time.Duration) *Api {
+	return NewApi("https://www.coronavirus.jetzt/karten/deutschland/", JetztExtractFunc, cachePeriod)
 }

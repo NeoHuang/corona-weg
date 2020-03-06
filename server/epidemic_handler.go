@@ -13,10 +13,10 @@ const (
 )
 
 type EpidemicHandler struct {
-	rkiApi *api.RkiApi
+	rkiApi *api.Api
 }
 
-func NewEpidemicHandler(rkiApi *api.RkiApi) *EpidemicHandler {
+func NewEpidemicHandler(rkiApi *api.Api) *EpidemicHandler {
 	return &EpidemicHandler{
 		rkiApi: rkiApi,
 	}
