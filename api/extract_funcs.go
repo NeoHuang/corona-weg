@@ -2,6 +2,7 @@ package api
 
 import (
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/NeoHuang/bit-hedge/core"
@@ -37,7 +38,7 @@ func RkiExtractFunc(doc *goquery.Document) core.EpidemicMap {
 		s.Find("tr").Each(func(_ int, s *goquery.Selection) {
 			s.Find("td").EachWithBreak(func(i int, s *goquery.Selection) bool {
 				if i%2 == 0 {
-					bundesland = s.Text()
+					bundesland = strings.Replace(s.Text(), " ", "-", -1)
 				} else {
 					infections, _ := strconv.Atoi(s.Text())
 					epidemicMap[bundesland] = core.Epidemic{
