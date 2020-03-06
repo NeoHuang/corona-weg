@@ -5,7 +5,7 @@ in Germany as well as providing a raw data API
 
 # How does it work
 
-this project consist of a server which scrape [Robert Koch Institute](https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Fallzahlen.html) every 9 minute and export the data for Promethues. The scraped data can also be accessed via `/api/epidemic`. 
+this project consist of a server which scrape [Robert Koch Institute](https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Fallzahlen.html) And [https://www.coronavirus.jetzt/](https://www.coronavirus.jetzt/karten/deutschland/) every 9 minute and merge the data by selecting larger number in each Bundesland. The data are then exported for Promethues. The scraped data can also be accessed via `/api/epidemic`. 
 
 Prometheus service will scrape the exported data and Grafana is used to visualize the result
 
