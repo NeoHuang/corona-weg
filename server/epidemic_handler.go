@@ -13,17 +13,17 @@ const (
 )
 
 type EpidemicHandler struct {
-	rkiApi *api.Api
+	api api.Api
 }
 
-func NewEpidemicHandler(rkiApi *api.Api) *EpidemicHandler {
+func NewEpidemicHandler(rkiApi api.Api) *EpidemicHandler {
 	return &EpidemicHandler{
-		rkiApi: rkiApi,
+		api: rkiApi,
 	}
 }
 
 func (handler *EpidemicHandler) ServeHTTP(writer http.ResponseWriter, httpRequest *http.Request) {
-	epidemicMap, err := handler.rkiApi.GetCurrent()
+	epidemicMap, err := handler.api.GetCurrent()
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		writer.Write([]byte(InternalErrorResponse))

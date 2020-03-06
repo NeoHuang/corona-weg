@@ -10,9 +10,13 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
+type Api interface {
+	GetCurrent() (core.EpidemicMap, error)
+}
+
 type ExtractFunc func(*goquery.Document) core.EpidemicMap
 
-type Api struct {
+type GeneralApi struct {
 	url       string
 	extractFn ExtractFunc
 
@@ -22,15 +26,15 @@ type Api struct {
 	mutex            sync.Mutex
 }
 
-func NewApi(endpointUrl string, extractFn ExtractFunc, cachePeriod time.Duration) *Api {
-	return &Api{
+func NewGeneralApi(endpointUrl string, extractFn ExtractFunc, cachePeriod time.Duration) *GeneralApi {
+	return &GeneralApi{
 		url:         endpointUrl,
 		extractFn:   extractFn,
 		cachePeriod: cachePeriod,
 	}
 }
 
-func (api *Api) GetCurrent() (core.EpidemicMap, error) {
+func (api *GeneralApi) GetCurrent() (core.EpidemicMap, error) {
 	api.mutex.Lock()
 	defer api.mutex.Unlock()
 
@@ -62,10 +66,10 @@ func (api *Api) GetCurrent() (core.EpidemicMap, error) {
 	return epidemicMap, nil
 }
 
-func NewRkiApi(cachePeriod time.Duration) *Api {
-	return NewApi("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Fallzahlen.html", RkiExtractFunc, cachePeriod)
+func NewRkiApi(cachePeriod time.Duration) Api {
+	return NewGeneralApi("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Fallzahlen.html", RkiExtractFunc, cachePeriod)
 }
 
-func NewJetztApi(cachePeriod time.Duration) *Api {
-	return NewApi("https://www.coronavirus.jetzt/karten/deutschland/", JetztExtractFunc, cachePeriod)
+func NewJetztApi(cachePeriod time.Duration) Api {
+	return NewGeneralApi("https://www.coronavirus.jetzt/karten/deutschland/", JetztExtractFunc, cachePeriod)
 }
