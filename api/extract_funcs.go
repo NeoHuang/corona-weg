@@ -1,6 +1,7 @@
 package api
 
 import (
+	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -35,27 +36,41 @@ func RkiExtractFunc(doc *goquery.Document, apiName string) core.EpidemicMap {
 	epidemicMap := core.EpidemicMap{}
 	doc.Find("tbody").EachWithBreak(func(_ int, s *goquery.Selection) bool {
 		// For each item found, get the band and title
-		var bundesland string
-		s.Find("tr").Each(func(_ int, s *goquery.Selection) {
-			s.Find("td").EachWithBreak(func(i int, s *goquery.Selection) bool {
-				if i%2 == 0 {
-					bundesland = strings.Replace(s.Text(), " ", "-", -1)
-				} else {
-					infections, _ := strconv.Atoi(s.Text())
-					epidemicMap[bundesland] = core.Epidemic{
-						Infections: infections,
-						Deaths:     0,
-						Timestamp:  now,
-						SourceApi:  apiName,
-					}
-				}
+		s.Find("tr").Each(func(row int, s *goquery.Selection) {
+			var bundesland string
+			epidemic := core.Epidemic{
+				Infections: 0,
+				Deaths:     0,
+				Timestamp:  now,
+				SourceApi:  apiName,
+			}
 
-				if i == 1 {
-					return false
+			s.Find("td").Each(func(i int, s *goquery.Selection) {
+				switch i {
+				case 0:
+					bundesland = strings.Replace(s.Text(), " ", "-", -1)
+				case 1:
+					infectionsString := strings.Replace(s.Text(), ".", "", -1)
+					infections, err := strconv.Atoi(infectionsString)
+					if err != nil {
+						log.Printf("failed to parse infections number for %s:%s", bundesland, err)
+					}
+					epidemic.Infections = infections
+				case 4:
+					deathString := strings.Replace(s.Text(), ".", "", -1)
+					deaths, err := strconv.Atoi(deathString)
+					if err != nil {
+						log.Printf("failed to parse infections number for %s:%s", bundesland, err)
+					}
+					epidemic.Deaths = deaths
 				}
-				return true
 
 			})
+			if bundesland != "" {
+				epidemicMap[bundesland] = epidemic
+			} else {
+				log.Printf("can't parse bundesland in row %d", row)
+			}
 		})
 		return false
 	})
