@@ -49,6 +49,8 @@ func RkiExtractFunc(doc *goquery.Document, apiName string) core.EpidemicMap {
 				switch i {
 				case 0:
 					bundesland = strings.Replace(s.Text(), " ", "-", -1)
+					// remove soft hypen
+					bundesland = strings.Replace(bundesland, "\u00AD", "", -1)
 				case 1:
 					infectionsString := strings.Replace(s.Text(), ".", "", -1)
 					infections, err := strconv.Atoi(infectionsString)
