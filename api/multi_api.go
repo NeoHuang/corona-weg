@@ -62,6 +62,11 @@ func (multiApi *MultiApi) GetCurrent() (core.EpidemicMap, error) {
 				mergedEpidemicMap[bundesland] = epidemic
 			}
 		}
+		for bundesland, _ := range epidemicMap {
+			if _, ok := Bundeslaender[bundesland]; !ok {
+				log.Printf("Api %s found unknown bundesland %s", api.Name(), bundesland)
+			}
+		}
 	}
 
 	var totalInfections, totalDeaths int
