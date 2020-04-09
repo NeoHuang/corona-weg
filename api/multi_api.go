@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/NeoHuang/bit-hedge/core"
+	"github.com/NeoHuang/corona-weg/core"
 )
 
 // multi api merge all apis to find the max of all bundesland and calculate the

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/NeoHuang/bit-hedge/core"
+	"github.com/NeoHuang/corona-weg/core"
 	"github.com/PuerkitoBio/goquery"
 )
 

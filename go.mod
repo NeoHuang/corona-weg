@@ -1,4 +1,4 @@
-module github.com/NeoHuang/bit-hedge
+module github.com/NeoHuang/corona-weg
 
 go 1.13
 

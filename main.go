@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/NeoHuang/bit-hedge/api"
-	"github.com/NeoHuang/bit-hedge/server"
+	"github.com/NeoHuang/corona-weg/api"
+	"github.com/NeoHuang/corona-weg/server"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )

@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/NeoHuang/bit-hedge/api"
+	"github.com/NeoHuang/corona-weg/api"
 )
 
 const (
