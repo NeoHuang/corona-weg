@@ -60,11 +60,11 @@ func RkiExtractFunc(doc *goquery.Document, apiName string) core.EpidemicMap {
 						log.Printf("failed to parse infections number for %s:%s", bundesland, err)
 					}
 					epidemic.Infections = infections
-				case 4:
+				case 5:
 					deathString := strings.Replace(s.Text(), ".", "", -1)
 					deaths, err := strconv.Atoi(deathString)
 					if err != nil {
-						log.Printf("failed to parse infections number for %s:%s", bundesland, err)
+						log.Printf("failed to parse deaths number for %s:%s", bundesland, err)
 					}
 					epidemic.Deaths = deaths
 				}
